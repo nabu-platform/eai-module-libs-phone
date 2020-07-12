@@ -37,7 +37,7 @@ public class Services {
 	
 	@WebResult(name = "formatted")
 	public String format(@WebParam(name = "number") String number, @WebParam(name = "region") String region, @WebParam(name = "format") PhoneNumberFormat format) throws NumberParseException {
-		return PhoneNumberUtil.getInstance().format(parse(number, region), format);
+		return number == null ? null : PhoneNumberUtil.getInstance().format(parse(number, region), format);
 	}
 	
 	@WebResult(name = "regions")
