@@ -31,6 +31,8 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberType;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
+import nabu.libs.google.phone.types.Region;
+
 /**
  * For reasons unknown, the PhoneNumber class has empty strings _by default_ instead of null
  * Additionally, the setters don't accept null (they explicitly throw an NPE°
@@ -45,6 +47,12 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 @WebService
 public class Services {
 	
+	public static void main(String...args) {
+		for (String region : PhoneNumberUtil.getInstance().getSupportedRegions()) {
+			System.out.println("region '" + region + "': " + PhoneNumberUtil.getInstance().getCountryCodeForRegion(region));
+		}
+	}
+	
 	// the region is not necessary if it is a global number
 	// otherwise the region is the region you are dialling from, not necessarily the region the phone number belongs in
 	@WebResult(name = "details")
@@ -55,6 +63,25 @@ public class Services {
 	@WebResult(name = "formatted")
 	public String format(@WebParam(name = "number") String number, @WebParam(name = "region") String region, @WebParam(name = "format") PhoneNumberFormat format) throws NumberParseException {
 		return number == null ? null : PhoneNumberUtil.getInstance().format(parse(number, region), format);
+	}
+
+	@WebResult(name = "countryCode")
+	public String getCountryPrefix(@NotNull @WebParam(name = "countryCode") String countryCode) {
+		// it is stored as uppercase
+		return countryCode == null ? null : "+" + PhoneNumberUtil.getInstance().getCountryCodeForRegion(countryCode.toUpperCase());
+	}
+	
+	@WebResult(name = "regions")
+	public List<Region> supportedRegions() {
+		ArrayList<Region> regions = new ArrayList<Region>();
+		for (String supported : PhoneNumberUtil.getInstance().getSupportedRegions()) {
+			Region region = new Region();
+			// they seem to all be country codes stored in uppercase
+			region.setCode(supported);
+			region.setPrefix("+" + PhoneNumberUtil.getInstance().getCountryCodeForRegion(supported));
+			regions.add(region);
+		}
+		return regions;
 	}
 	
 	@WebResult(name = "regions")

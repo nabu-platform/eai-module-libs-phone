@@ -40,9 +40,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.libphonenumber</groupId>
-			<artifactId>libphonenumber</artifactId>
-			<version>8.9.6</version>
+		    <groupId>com.googlecode.libphonenumber</groupId>
+		    <artifactId>libphonenumber</artifactId>
+		    <version>9.0.1</version>
 		</dependency>
+
 	</dependencies>
 </project>
